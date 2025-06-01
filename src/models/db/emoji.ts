@@ -3,31 +3,32 @@ import type { dbType } from '@/types'
 type Model = dbType['emoji']
 
 export const table = sequelize.define('emoji', {
-  id: {
-    type: DataTypes.INTEGER,
+  leftEmoji: {
+    type: DataTypes.STRING(8),
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true
-  },
-  leftEmoji: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
+    comment: '左边的表情'
   },
   rightEmoji: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: DataTypes.STRING(8),
+    allowNull: false,
+    primaryKey: true,
+    comment: '右边的表情'
   },
   date: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: DataTypes.NOW
+    comment: '时间戳'
   }
 }, {
   freezeTableName: true,
   defaultScope: {
     raw: true
-  }
+  },
+  indexes: [{
+    unique: true,
+    fields: ['leftEmoji', 'rightEmoji']
+  }]
 })
 
 await table.sync()
@@ -52,6 +53,19 @@ export async function add (
     date
   }
   return await table.upsert(data) as [Model, boolean | null]
+}
+
+/**
+ * 批量添加emoji信息。
+ *
+ * @param emojis 表情信息数组
+ * @returns 添加结果
+ */
+export async function add_bulk (
+  emojis: { leftEmoji: string, rightEmoji: string, date: number }[]
+): Promise<void> {
+  await clear()
+  await table.bulkCreate(emojis)
 }
 
 /**
@@ -87,5 +101,4 @@ export async function clear (): Promise<void> {
   await table.destroy({
     truncate: true
   })
-  await sequelize.query('DELETE FROM sqlite_sequence WHERE name = "emoji"')
 }

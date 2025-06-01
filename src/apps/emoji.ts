@@ -1,7 +1,15 @@
 import emojiRegex from 'emoji-regex'
-import karin, { logger, Message } from 'node-karin'
+import karin, { logger, Message, segment } from 'node-karin'
 
+import { Config } from '@/common'
+import { utils } from '@/models'
 import { Version } from '@/root'
+
+const createRegex = (): RegExp => {
+  const regex = emojiRegex()
+  const pattern = `(${regex.source})\\s*\\+\\s*(${regex.source})`
+  return new RegExp(pattern)
+}
 
 /**
  * 获取emoji的 Unicode的编码
@@ -9,24 +17,25 @@ import { Version } from '@/root'
  * @returns emoji的 Unicode的编码
  */
 function getEmojiCodepoint (emoji: string): string {
-  const codePoints = Array.from(emoji).map(char => char.codePointAt(0)?.toString(16).toUpperCase().padStart(4, '0'))
-  return codePoints.join('-')
+  return emoji.codePointAt(0)?.toString(16) as string
 }
 
-export const emoji = karin.command(/([\p{Emoji}]+)\s*\+\s*([\p{Emoji}]+)/u, async (e: Message) => {
+export const emoji = karin.command(createRegex(), async (e: Message) => {
   try {
+    if (!Config.emoji.enable) return false
     const [_, emoji1, emoji2] = e.msg.match(emoji.reg)!
-    console.log(emoji1, emoji2)
-
-    // 获取 emoji 的编码
     const emoji1Codepoint = getEmojiCodepoint(emoji1)
     const emoji2Codepoint = getEmojiCodepoint(emoji2)
-
-    console.log(`Emoji 1 Codepoint: ${emoji1Codepoint}`)
-    console.log(`Emoji 2 Codepoint: ${emoji2Codepoint}`)
+    const info = await utils.get_emoji(emoji1Codepoint, emoji2Codepoint)
+    if (!info) {
+      await e.reply('暂不支持该emoji合成')
+      return
+    }
+    const emojiImage = await utils.make_emoji(info.leftEmoji, info.rightEmoji, info.date)
+    await e.reply(segment.image(`base64://${emojiImage}`))
   } catch (error) {
     logger.error(error)
-    await e.reply(`[${Version.Plugin_AliasName}]: emoji合成失败: ${(error as Error).message}`)
+    await e.reply(`[${Version.Plugin_AliasName}]: emoji生成失败: ${(error as Error).message}`)
   }
 }, {
   name: '柠糖emoji:emoji合成',

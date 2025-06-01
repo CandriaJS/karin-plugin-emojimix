@@ -1,7 +1,10 @@
-import { logger } from 'node-karin'
+import fs from 'fs/promises'
+import { base64, exists, karinPathBase, logger } from 'node-karin'
+import path from 'path'
 
 import { Config } from '@/common'
 import { db } from '@/models'
+import { Version } from '@/root'
 import { dbType } from '@/types'
 
 import Request from './request'
@@ -46,12 +49,16 @@ export async function init () {
     const url = Config.emoji.proxy_url?.trim()
       ? `${Config.emoji.proxy_url.replace(/\/+$/, '')}/${resources_url}`
       : base_url
+
     const res = await Request.get(url, null, null, 'json')
-    await Promise.all(
-      res.data.map(async (item: { leftEmojiCodepoint: string, rightEmojiCodepoint: string, date: number }) => {
-        await add_emoji(item.leftEmojiCodepoint, item.rightEmojiCodepoint, item.date)
-      })
-    )
+
+    const emojiDataArray = res.data.map((item: { leftEmojiCodepoint: string, rightEmojiCodepoint: string, date: number }) => ({
+      leftEmoji: item.leftEmojiCodepoint,
+      rightEmoji: item.rightEmojiCodepoint,
+      date: item.date
+    }))
+
+    await add_emoji(emojiDataArray, 'bulk')
   } catch (error) {
     logger.error(error)
     throw new Error(`初始化emoji失败: ${(error as Error).message}`)
@@ -59,17 +66,65 @@ export async function init () {
 }
 
 /**
- * 添加emoji信息。
+ * 添加emoji信息，支持单个和批量添加。
  *
- * @param leftEmoji 左边表情
- * @param rightEmoji 右边表情
- * @param date 时间戳
+ * @param data 表情数据，可以是单个对象或对象数组
+ * @param type 添加类型，'common'为单个添加，'bulk'为批量添加，默认为'common'
  * @returns 添加结果
  */
 export async function add_emoji (
+  data: { leftEmoji: string, rightEmoji: string, date: number } | { leftEmoji: string, rightEmoji: string, date: number }[],
+  type: 'common' | 'bulk' = 'common'
+): Promise<[Model, boolean | null] | void> {
+  if (type === 'bulk' && Array.isArray(data)) {
+    return await db.emoji.add_bulk(data)
+  } else if (type === 'common' && !Array.isArray(data)) {
+    return await db.emoji.add(data.leftEmoji, data.rightEmoji, data.date)
+  } else {
+    throw new Error('参数类型与操作类型不匹配')
+  }
+}
+
+/**
+ * 获取emoji信息。
+ * @param leftEmoji 左边emoji
+ * @param rightEmoji 右边emoji
+ * @returns emoji信息
+ */
+export async function get_emoji (
   leftEmoji: string,
-  rightEmoji: string,
-  date: number
-): Promise<[Model, boolean | null]> {
-  return await db.emoji.add(leftEmoji, rightEmoji, date)
+  rightEmoji: string
+): Promise<Model | null> {
+  return await db.emoji.get(leftEmoji, rightEmoji)
+}
+
+/**
+ * 生成emoji图片
+ * @param leftEmoji 左边emoji
+ * @param rightEmoji 右边emoji
+ * @param date 时间戳
+ * @returns 返回生成的emoji图片的Base64编码
+ */
+export async function make_emoji (leftEmoji: string, rightEmoji: string, date: number): Promise<string> {
+  try {
+    if (!leftEmoji || !rightEmoji || !date) {
+      throw new Error('左边表情或右边表情或日期不能为空')
+    }
+    const cachePath = path.join(karinPathBase, Version.Plugin_Name, 'data', 'emoji')
+    const cacheFile = path.join(cachePath, `${leftEmoji}-${rightEmoji}-${date}.png`)
+    if (Config.emoji.cache && await exists(cacheFile)) {
+      return base64(cacheFile)
+    }
+    const url = `https://www.gstatic.com/android/keyboard/emojikitchen/${date}/u${leftEmoji}/u${leftEmoji}_u${rightEmoji}.png`
+    const res = await Request.get(url, null, null, 'arraybuffer')
+    if (Config.emoji.cache) {
+      await fs.mkdir(cachePath, { recursive: true })
+      await fs.writeFile(cacheFile, res.data)
+      return await base64(cacheFile)
+    }
+    return await base64(res.data)
+  } catch (error) {
+    logger.error(error)
+    throw new Error(`生成emoji失败: ${(error as Error).message}`)
+  }
 }

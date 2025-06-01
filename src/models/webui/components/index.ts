@@ -3,8 +3,8 @@ import { otherComponents } from './other'
 
 export const components = async () => {
   const results = await Promise.all([
-    emojiComponents,
-    otherComponents
+    emojiComponents(),
+    otherComponents()
   ])
 
   return results.flat()

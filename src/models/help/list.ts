@@ -23,6 +23,11 @@ export const helpList:HelpListType = [
         icon: 95,
         title: '#柠糖emoji(插件)更新',
         desc: '更新插件本体'
+      },
+      {
+        icon: 35,
+        title: '#柠糖emoji更新emoji数据',
+        desc: '更新emoji数据'
       }
     ]
   }

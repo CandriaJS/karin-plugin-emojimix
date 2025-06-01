@@ -1,6 +1,7 @@
 import { logger } from 'node-karin'
 import axios from 'node-karin/axios'
 
+import { utils } from '@/models'
 import { Version } from '@/root'
 
 let responseData = '加载失败'
@@ -13,7 +14,12 @@ try {
 } catch (error) {
   logger.error(logger.chalk.red.bold('⚠️ 访问统计数据失败，超时或网络错误'))
 }
-
+try {
+  await utils.init()
+  logger.info(logger.chalk.bold.cyan('🎉 emoji数据加载成功！'))
+} catch (error) {
+  logger.error(logger.chalk.bold.red(`💥 emoji数据加载失败！错误详情：${(error as Error).message}`))
+}
 logger.info(logger.chalk.bold.rgb(0, 255, 0)('========= 🌟🌟🌟 ========='))
 logger.info(
   logger.chalk.bold.blue('🌍 当前运行环境: ') +

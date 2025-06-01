@@ -24,6 +24,7 @@ metadata_original.json
 
 # 配置
 /lib
+cli/
 
 # 依赖
 node_modules/
@@ -31,5 +32,4 @@ config/config/pm2.yaml
 index.js
 pnpm-workspace.yaml
 @karinjs/
-.env
 

@@ -1,4 +1,5 @@
 import { pkg, Version } from '@/root'
+
 export const pluginConfig = {
   name: Version.Plugin_AliasName,
   description: '一个Karin版的emoji合成插件',
