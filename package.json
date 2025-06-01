@@ -1,0 +1,87 @@
+{
+  "name": "@candriajs/karin-plugin-emojimix",
+  "version": "0.0.0",
+  "description": "一个Karin版的emoji合成插件",
+  "keywords": [
+    "karin-plugin",
+    "karin-plugin-emojimix"
+  ],
+  "homepage": "https://github.com/CandriaJS/karin-plugin-emojimix",
+  "bugs": {
+    "url": "https://github.com/CandriaJS/karin-plugin-emojimix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CandriaJS/karin-plugin-emojimix.git"
+  },
+  "license": "GNU General Public License v3.0",
+  "author": "CandriaJS",
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "config/",
+    "lib/",
+    "resources/",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "app": "node --import tsx src/app.ts",
+    "build": "tsc --noEmit && tsup",
+    "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "pub": "npm publish --access public",
+    "sort": "sort-package-json",
+    "watch": "cross-env EBV_FILE=\"development.env\" tsx watch --include \"src/**/*.ts\" src/app.ts"
+  },
+  "dependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "axios-retry": "^4.5.0",
+    "emoji-regex": "^10.4.0",
+    "markdown-it": "^14.1.0",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "@karinjs/plugin-puppeteer": "^1.0.16",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^22.15.3",
+    "@typescript-eslint/parser": "^8.31.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.26.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^15.15.0",
+    "neostandard": "^0.12.1",
+    "node-karin": "^1.9.8",
+    "tsc-alias": "1.8.13",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.1"
+  },
+  "packageManager": "pnpm@9.13.2",
+  "karin": {
+    "main": "src/index.ts",
+    "web": "./lib/web.config.js",
+    "ts-web": "./src/web.config.ts",
+    "apps": [
+      "lib/apps"
+    ],
+    "ts-apps": [
+      "src/apps"
+    ],
+    "static": [
+      "resources"
+    ],
+    "files": [
+      "config",
+      "data",
+      "resources"
+    ],
+    "engines": {
+      "karin": ">=1.9.1"
+    }
+  }
+}
