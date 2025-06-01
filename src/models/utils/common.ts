@@ -113,7 +113,7 @@ export async function make_emoji (leftEmoji: string, rightEmoji: string, date: n
     const cachePath = path.join(karinPathBase, Version.Plugin_Name, 'data', 'emoji')
     const cacheFile = path.join(cachePath, `${leftEmoji}-${rightEmoji}-${date}.png`)
     if (Config.emoji.cache && await exists(cacheFile)) {
-      return base64(cacheFile)
+      return await base64(cacheFile)
     }
     const url = `https://www.gstatic.com/android/keyboard/emojikitchen/${date}/u${leftEmoji}/u${leftEmoji}_u${rightEmoji}.png`
     const res = await Request.get(url, null, null, 'arraybuffer')
