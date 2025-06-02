@@ -38,8 +38,6 @@
     "watch": "cross-env EBV_FILE=\"development.env\" tsx watch --include \"src/**/*.ts\" src/app.ts"
   },
   "dependencies": {
-    "@types/markdown-it": "^14.1.2",
-    "axios-retry": "^4.5.0",
     "emoji-regex": "^10.4.0",
     "markdown-it": "^14.1.0",
     "sequelize": "^6.37.7"
@@ -47,6 +45,7 @@
   "devDependencies": {
     "@karinjs/plugin-puppeteer": "^1.0.16",
     "@types/lodash": "^4.17.16",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.15.3",
     "@typescript-eslint/parser": "^8.31.1",
     "cross-env": "^7.0.3",
