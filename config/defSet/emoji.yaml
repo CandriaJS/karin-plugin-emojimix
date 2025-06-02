@@ -3,6 +3,9 @@
 # 是否开启emoji功能
 enable: true
 
+# 是否开启强制前缀, 开启后强制使用#柠糖表emoji合成emoji1 + emoji2
+prefix: false
+
 # 是否开启缓存
 cache: true
 

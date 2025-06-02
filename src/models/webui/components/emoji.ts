@@ -20,6 +20,11 @@ export const emojiComponents = () => [
             description: '是否开启缓存已合成过的emoji图片',
             defaultSelected: Config.emoji.cache
           }),
+          components.switch.create('prefix', {
+            label: '前缀',
+            description: '是否开启强制强制,开启后强制使用[#柠糖emoji核合成]前缀触发',
+            defaultSelected: Config.emoji.prefix
+          }),
           components.input.create('proxy_url', {
             label: '代理镜像资源地址',
             description: '用于初始化资源下载',

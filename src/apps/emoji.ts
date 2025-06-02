@@ -5,9 +5,10 @@ import { Config } from '@/common'
 import { utils } from '@/models'
 import { Version } from '@/root'
 
-const createRegex = (): RegExp => {
+const createRegex = () => {
   const regex = emojiRegex()
-  const pattern = `(${regex.source})\\s*\\+\\s*(${regex.source})`
+  const prefix = '#?柠糖emoji合成' + (Config.emoji.prefix ? '' : '?')
+  const pattern = `(?:${prefix}\\s*)?\\s*(${regex.source})\\s*\\+\\s*(${regex.source})`
   return new RegExp(pattern)
 }
 
@@ -32,7 +33,7 @@ export const emoji = karin.command(createRegex(), async (e: Message) => {
       return
     }
     const emojiImage = await utils.make_emoji(info.leftEmoji, info.rightEmoji, info.date)
-    await e.reply(segment.image(`base64://${emojiImage}`))
+    return await e.reply(segment.image(`base64://${emojiImage}`))
   } catch (error) {
     logger.error(error)
     await e.reply(`[${Version.Plugin_AliasName}]: emoji生成失败: ${(error as Error).message}`)
