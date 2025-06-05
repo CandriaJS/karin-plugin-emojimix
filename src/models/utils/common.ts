@@ -44,6 +44,8 @@ export const isAbroad = async (): Promise<boolean> => {
 
 export async function init () {
   try {
+    const data = await db.emoji.getAll()
+    if (data.length > 0) return false
     const resources_url = 'https://raw.githubusercontent.com/CandriaJS/karin-plugin-emojimix/main/metadata.json'
     const base_url = await isAbroad() ? resources_url : `https://gh-proxy.com/${resources_url}`
     const url = Config.emoji.proxy_url?.trim()
