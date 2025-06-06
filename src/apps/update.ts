@@ -20,7 +20,7 @@ async function updateNpmPackage (version: string, pluginName: string) {
   }
 }
 
-export const update = karin.command(/^#?(?:(?:柠糖)?emoji)(?:(强制|预览版))?更新$/i, async (e: Message) => {
+export const update = karin.command(/^#?(?:(?:柠糖)?emoji)更新$/i, async (e: Message) => {
   let status: 'ok' | 'failed' | 'error' = 'failed'
   let data: ExecException | string = ''
 
