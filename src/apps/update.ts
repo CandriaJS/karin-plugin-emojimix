@@ -59,7 +59,7 @@ export const updateRes = karin.command(/^#?(?:(?:柠糖)?emoji)更新(?:emoji)?(
     return false
   }
 }, {
-  name: '柠糖表情:更新表情包资源',
+  name: '柠糖emoji:更新emoji资源',
   priority: -Infinity,
   event: 'message',
   permission: 'master'

@@ -36,7 +36,7 @@ pnpm add @candriajs/karin-plugin-emojimix@latest -w
   <img src="https://contrib.rocks/image?repo=CandriaJS/karin-plugin-emojimix" />
 </a>
 
-![Alt](https://repobeats.axiom.co/api/embed/73df3435008d412e567482e27446e9467c7f9007.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/fe9a4030f78b21bba973a47ee9bb6d7218bf3a98.svg "Repobeats analytics image")
 
 # 资源 📚
 
