@@ -4,6 +4,15 @@ import axios from 'node-karin/axios'
 import { utils } from '@/models'
 import { Version } from '@/root'
 
+export async function KARIN_PLUGIN_INIT () {
+  try {
+    await utils.init()
+    logger.info(logger.chalk.bold.cyan(`[${Version.Plugin_AliasName}] 🎉 emoji数据加载成功`))
+  } catch (error) {
+    logger.error(logger.chalk.bold.red(`[${Version.Plugin_AliasName}]💥 emoji数据加载失败, 错误详情：${(error as Error).message}`))
+  }
+}
+
 let responseData = '加载失败'
 try {
   const response = await axios.get(
@@ -13,12 +22,6 @@ try {
   responseData = response.data.data
 } catch (error) {
   logger.error(logger.chalk.red.bold('⚠️ 访问统计数据失败，超时或网络错误'))
-}
-try {
-  await utils.init()
-  logger.info(logger.chalk.bold.cyan('🎉 emoji数据加载成功！'))
-} catch (error) {
-  logger.error(logger.chalk.bold.red(`💥 emoji数据加载失败！错误详情：${(error as Error).message}`))
 }
 logger.info(logger.chalk.bold.rgb(0, 255, 0)('========= 🌟🌟🌟 ========='))
 logger.info(
