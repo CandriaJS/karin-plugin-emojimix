@@ -20,7 +20,7 @@ async function updateNpmPackage (version: string, pluginName: string) {
   }
 }
 
-export const update = karin.command(/^#?(?:(?:柠糖)?emoji)更新$/i, async (e: Message) => {
+export const update = karin.command(/^#?(?:柠糖emoji)更新$/i, async (e: Message) => {
   let status: 'ok' | 'failed' | 'error' = 'failed'
   let data: ExecException | string = ''
 
@@ -46,7 +46,7 @@ export const update = karin.command(/^#?(?:(?:柠糖)?emoji)更新$/i, async (e:
   permission: 'master'
 })
 
-export const updateRes = karin.command(/^#?(?:(?:柠糖)?emoji)更新(?:emoji)?(?:资源|数据)?$/i, async (e: Message) => {
+export const updateRes = karin.command(/^#?(?:柠糖emoji)(?:更新emoji)(?:资源|数据)$/i, async (e: Message) => {
   try {
     await e.reply('正在更新emoji数据...')
     await utils.init()
