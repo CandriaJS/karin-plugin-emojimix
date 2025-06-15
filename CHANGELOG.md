@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.1.3](https://github.com/CandriaJS/karin-plugin-emojimix/compare/v1.1.2...v1.1.3) (2025-06-15)
+
+
+### 🐛 错误修复
+
+* update正则 ([c9aafa1](https://github.com/CandriaJS/karin-plugin-emojimix/commit/c9aafa1afedb1e7e8c5f2628ede72d11406431b4))
+
+
+### ⚡️ 性能优化
+
+* 优化异常输出 ([56ff91c](https://github.com/CandriaJS/karin-plugin-emojimix/commit/56ff91c4185b6883f11a6e28d043bc049b533fcb))
+
+
+### 🎨 代码样式
+
+* 优化布局样式 ([3ddb46e](https://github.com/CandriaJS/karin-plugin-emojimix/commit/3ddb46e4f9bb1582d08e18f7f1b971df4ad42b7b))
+
+
+### ♻️ 代码重构
+
+* **src:** 重构 emoji 数据加载逻辑 ([5ec5fa9](https://github.com/CandriaJS/karin-plugin-emojimix/commit/5ec5fa9307b1d6ff63cad7927f9592ca6362ada8))
+* **update:** 修改更新命令名称 ([b9b5b3b](https://github.com/CandriaJS/karin-plugin-emojimix/commit/b9b5b3bb6355d1fd2d5164c3821f6b7f8dc25526))
+
 ## [1.1.2](https://github.com/CandriaJS/karin-plugin-emojimix/compare/v1.1.1...v1.1.2) (2025-06-06)
 
 
