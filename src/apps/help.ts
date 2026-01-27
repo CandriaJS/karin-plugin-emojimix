@@ -1,64 +1,58 @@
-import MarkdownIt from 'markdown-it'
-import karin, { Message, requireFile } from 'node-karin'
-import lodash from 'node-karin/lodash'
-
-import { Render } from '@/common'
-import { Help } from '@/models'
 import { Version } from '@/root'
-import type { HelpType } from '@/types'
+import { HelpGroup, help as render_help } from '@puniyu/component'
+import karin, { Message, segment } from 'node-karin'
+import fs from 'node:fs'
 
-export const help = karin.command(/^#?(?:柠糖emoji)(?:命令|帮助|菜单|help|说明|功能|指令|使用说明)$/i, async (e: Message) => {
-  let helpGroup: HelpType['helpList'] = []
-
-  lodash.forEach(Help.List.helpList, (group) => {
-    if (group.auth && group.auth === 'master' && !e.isMaster) {
-      return true
+export const help = karin.command(
+  /^#?(?:柠糖emoji)(?:命令|帮助|菜单|help|说明|功能|指令|使用说明)$/i,
+  async (e: Message) => {
+    const emojiIcon = await fs.promises.readFile(
+      `${Version.Plugin_Path}/resources/icons/emoji.svg`,
+    )
+    const List: HelpGroup = {
+      name: '常用操作',
+      list: [{ name: '[emoji1]+[emmji2]', desc: 'emoji合成', icon: emojiIcon }],
     }
-    lodash.forEach(group.list, (help) => {
-      let icon = help.icon * 1
-      if (!icon) {
-        help.css = 'display:none'
-      } else {
-        let x = (icon - 1) % 10
-        let y = (icon - x - 1) / 10
-        help.css = `background-position:-${x * 50}px -${y * 50}px`
-      }
+
+    const helpList: HelpGroup[] = [List]
+
+    if (e.isMaster) {
+      const updateIcon = await fs.promises.readFile(
+        `${Version.Plugin_Path}/resources/icons/update.svg`,
+      )
+      helpList.push({
+        name: '管理命令',
+        list: [
+          {
+            name: '#柠糖emoji(插件)更新',
+            desc: '更新插件本体',
+            icon: updateIcon,
+          },
+          {
+            name: '#柠糖emoji更新emoji数据',
+            desc: '更新emoji数据',
+            icon: updateIcon,
+          },
+        ],
+      })
+    }
+    const bg = await fs.promises.readFile(
+      `${Version.Plugin_Path}/resources/background.webp`,
+    )
+    const img = await render_help({
+      title: '柠糖emoji帮助',
+      list: helpList,
+      theme: {
+        backgroundImage: bg,
+      },
     })
-
-    helpGroup.push(group)
-  })
-  const themeData = Help.Theme.getThemeData(Help.Cfg.helpCfg)
-  const img = await Render.render(
-    'help/index',
-    {
-      helpCfg: Help.Cfg.helpCfg,
-      helpGroup,
-      ...themeData
-    }
-  )
-  await e.reply(img)
-  return true
-}, {
-  name: '柠糖emoji:帮助',
-  priority: -Infinity,
-  event: 'message',
-  permission: 'all'
-})
-
-export const version = karin.command(/^#?(?:柠糖emoji)(?:版本|版本信息|version|versioninfo)$/i, async (e: Message) => {
-  const md = new MarkdownIt({ html: true })
-  const makdown = md.render(await requireFile(`${Version.Plugin_Path}/CHANGELOG.md`))
-  const img = await Render.render(
-    'help/version-info',
-    {
-      Markdown: makdown
-    }
-  )
-  await e.reply(img)
-  return true
-}, {
-  name: '柠糖emoji:版本',
-  priority: -Infinity,
-  event: 'message',
-  permission: 'all'
-})
+    await e.reply(segment.image(`base64://${img.toString('base64')}`))
+    return true
+  },
+  {
+    name: '柠糖emoji:帮助',
+    priority: -Infinity,
+    event: 'message',
+    permission: 'all',
+  },
+)

@@ -1,7 +1,7 @@
 name: 错误报告
 description: 在使用 karin-plugin-emojimix 的过程中遇到了错误
-title: "[🐛 Bug]: "
-labels: ["bug"]
+title: '[🐛 Bug]: '
+labels: ['bug']
 
 body:
   - type: markdown
