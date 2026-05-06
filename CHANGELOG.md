@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/CandriaJS/karin-plugin-emojimix/compare/v1.1.5...v1.1.6) (2026-05-06)
+
+
+### 🔧 其他更新
+
+* 更新help组件 ([9debbbf](https://github.com/CandriaJS/karin-plugin-emojimix/commit/9debbbfdfdea620ced716ad58b91be293adb6286))
+
 ## [1.1.5](https://github.com/CandriaJS/karin-plugin-emojimix/compare/v1.1.4...v1.1.5) (2026-01-27)
 
 
