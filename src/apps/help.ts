@@ -1,5 +1,6 @@
+import { Render } from '@/common'
 import { Version } from '@/root'
-import { HelpGroup, help as render_help } from '@puniyu/component'
+import type { HelpGroup } from '@puniyu/component'
 import karin, { Message, segment } from 'node-karin'
 import fs from 'node:fs'
 
@@ -39,11 +40,11 @@ export const help = karin.command(
     const bg = await fs.promises.readFile(
       `${Version.Plugin_Path}/resources/background.webp`,
     )
-    const img = await render_help({
+    const img = await Render.help({
       title: '柠糖emoji帮助',
-      list: helpList,
+      groups: helpList,
       theme: {
-        backgroundImage: bg,
+        background: { type: 'Image', field0: bg },
       },
     })
     await e.reply(segment.image(`base64://${img.toString('base64')}`))
